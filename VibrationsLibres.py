@@ -25,8 +25,8 @@ t = np.linspace(0,Tmax,Nt)
 
 # Description des variables dynamiques
 
-EI = 1e4
-rhoA = 1e0
+EI = 1e6
+rhoA = 1e2
 
 # Conditions initiales
 x = np.linspace(0,L,Nx)

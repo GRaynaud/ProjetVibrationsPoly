@@ -5,7 +5,7 @@ Test d'implantation d'un schéma numérique pour un problème de poutre 1D
 Cas de vibrations forcees par le modele 1 (continue)
 conditions initiales : y(x,0) = 0, dy/dt(x,0) = 0
 """
-
+#####################################
 # Bibliotheques
 import numpy as np
 import matplotlib.pyplot as plt
@@ -29,15 +29,22 @@ t = np.linspace(0,Tmax,Nt)
 
 # Description des variables dynamiques
 
-EI = 1e4
-rhoA = 1e0
+EI = 1e6
+rhoA = 1e2
 
 # Conditions initiales
 x = np.linspace(0,L,Nx)
 y0 = np.zeros(Nx)
 dty0 = 0.1*np.sin(np.pi*x/L)
 
-# Construction de la derivee 4eme en espace
+####################################
+# Conteneur pour la solution
+y = np.zeros((Nt,Nx))
+y[0,:] = y0
+y[1,:] = y0 + dt*dty0
+
+###################################
+# Construction de la derivee 4eme en espace - operateur du membre de droite
 
 A = 6.*np.eye(Nx)
 A += -4.*np.eye(Nx,Nx,1) + (-4.)*np.eye(Nx,Nx,-1)
@@ -50,18 +57,12 @@ A[-1,-2] = 1 #dx**2
 A[-1,-3] = 0
 A *= 1./dx**4
 
-
 # Construction de l'operateur du membre de gauche
 
 B = np.eye(Nx) + 0.5*(dt**2)*(EI/rhoA)*A
 invB = np.linalg.inv(B)
 
-# Conteneur pour la solution
-y = np.zeros((Nt,Nx))
-y[0,:] = y0
-y[1,:] = y0 + dt*dty0
-
-
+####################################"
 # definition de l'excitation
 
 # Excitation discontinue --> Cas 2
@@ -82,6 +83,7 @@ def f1(xpos,tpos):
     return fvalue
 
 
+#################################
 # Intégration en temps
 
 '''
@@ -96,10 +98,12 @@ for i in range(2,Nt):
     X = 2.*y[i-1,:] - y[i-2,:] - 0.5*(dt**2)*(EI/rhoA)*np.dot(A,y[i-1,:]) + (dt)**2/rhoA * f1(x,i*dt)
     y[i,:] = np.dot(invB,X)
 
+
+##############################"
 # Plot
 
 
-# Plot
+# Plot d'instantanes
 
 
 #plt.figure()
@@ -116,8 +120,17 @@ for i in range(2,Nt):
 plt.figure()
 plt.plot(t,y[:,int(0.5*Nx)])
 plt.xlabel('time t')
-plt.ylabel('Mid span deflection (m)')    
+plt.ylabel('Deflection (m)')    
+plt.title('Mid Span Deflection')
 
+# Plot de la deflection au niveau du pieton
+
+ypieton = [y[k,min(int(v*k*dt/dx),Nx-1)] for k in range(Nt)]
+plt.figure()
+plt.plot(t,ypieton)
+plt.xlabel('time t, position x = vt')
+plt.ylabel('Deflection')
+plt.title('Deflection under walkers feet')
     
     
     
