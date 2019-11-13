@@ -9,6 +9,12 @@ conditions initiales : y(x,0) = 0, dy/dt(x,0) = 0
 # Bibliotheques
 import numpy as np
 import matplotlib.pyplot as plt
+plt.rc('text', usetex=True)
+plt.rc('font', family='serif')
+plt.rc('font', size=18)
+plt.rc('axes',titlesize=20)
+plt.rc('legend',fontsize=18)
+plt.rc('figure',titlesize=24)
 
 # Description des variables geometriques
 
@@ -87,8 +93,11 @@ def f1(xpos,tpos):
 # Intégration en temps
 
 '''
+1/2 - Schema Implicite en temps :
+    
 (Id + EI*dt^2/2rhoA * A) y^k+1 = 2*y^k - y^k-1 - EI*dt^2/2rhoA * A*y^k + dt^2/rhoA * f(t)
 
+y^k : vecteur y(x,k*dt) de taille Nx 
 A : operateur de derivation en espace
 f(t) : vecteur dont les coordonnées sont f(x,t) --> excitation. Choisir au choix f1 ou f2
 
@@ -122,6 +131,8 @@ plt.plot(t,y[:,int(0.5*Nx)])
 plt.xlabel('time t')
 plt.ylabel('Deflection (m)')    
 plt.title('Mid Span Deflection')
+plt.tight_layout()
+
 
 # Plot de la deflection au niveau du pieton
 
@@ -131,7 +142,7 @@ plt.plot(t,ypieton)
 plt.xlabel('time t, position x = vt')
 plt.ylabel('Deflection')
 plt.title('Deflection under walkers feet')
-    
+plt.tight_layout()    
     
     
     
