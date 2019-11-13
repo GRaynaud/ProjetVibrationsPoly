@@ -2,8 +2,8 @@
 """
 Code Python
 Test d'implantation d'un schéma numérique pour un problème de poutre 1D
-Cas de vibrations libres (pas de forçage)
-conditions initiales : y(x,0) = 0, dy/dt(x,0) = 1
+Cas de vibrations forcees par le modele 1 (continue)
+conditions initiales : y(x,0) = 0, dy/dt(x,0) = 0
 """
 
 # Bibliotheques
@@ -15,6 +15,9 @@ import matplotlib.pyplot as plt
 L = 10. #m
 Nx = 100 # nombre de points pour discrétiser l'axe x
 dx = L/Nx
+alpha0 = 0.3 #rad, angle d'attaque vertical
+v = 1 #m/s vitesse du pieton
+dpas = 0.5 #m taille d'un pas
 
 # Description des variables temporelles
 
@@ -65,12 +68,23 @@ for i in range(2,Nt):
 # Plot
 
 
+# Plot
+
+
 plt.figure()
 for i in range(Nt):
     if i%10 == 0:
         plt.plot(x,y[i,:], label=str(i))
+plt.xlabel('Horizontal axis x')
+plt.ylabel('Deflection (m)')
 plt.legend()
 plt.show()
+
+    
+plt.figure()
+plt.plot(t,y[:,int(0.5*Nx)])
+plt.xlabel('time t')
+plt.ylabel('Mid span deflection (m)')    
 
     
     

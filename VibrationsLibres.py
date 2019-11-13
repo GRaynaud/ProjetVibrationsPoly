@@ -13,18 +13,19 @@ import matplotlib.pyplot as plt
 # Description des variables geometriques
 
 L = 10. #m
-Nx = 100 # nombre de points pour discrétiser l'axe x
+Nx = 1000 # nombre de points pour discrétiser l'axe x
 dx = L/Nx
 
 # Description des variables temporelles
 
-Tmax = 1
-dt = 0.01
+Tmax = 10
+dt = 0.001
 Nt = int(Tmax/dt)
+t = np.linspace(0,Tmax,Nt)
 
 # Description des variables dynamiques
 
-EI = 1e3
+EI = 1e4
 rhoA = 1e0
 
 # Conditions initiales
@@ -69,10 +70,14 @@ plt.figure()
 for i in range(Nt):
     if i%10 == 0:
         plt.plot(x,y[i,:], label=str(i))
+plt.xlabel('Horizontal axis x')
+plt.ylabel('Deflection (m)')
 plt.legend()
 plt.show()
 
     
-    
-    
+plt.figure()
+plt.plot(t,y[:,int(0.5*Nx)])
+plt.xlabel('time t')
+plt.ylabel('Mid span deflection (m)')    
     
