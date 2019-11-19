@@ -23,7 +23,8 @@ Nx = 100 # nombre de points pour discrétiser l'axe x
 dx = L/Nx
 alpha0 = 0.3 #rad, angle d'attaque vertical
 v = 1 #m/s vitesse du pieton
-dpas = 0.5 #m taille d'un pas
+lj = 0.5 #m longueur d'une jambe
+dpas = 2*lj*np.sin(alpha0) #m taille d'un pas
 mg = 1e3 #N poids du marcheur
 
 # Description des variables temporelles
@@ -35,7 +36,7 @@ t = np.linspace(0,Tmax,Nt)
 
 # Description des variables dynamiques
 
-EI = 1e6
+EI = 1e5
 rhoA = 1e2
 
 # Conditions initiales
@@ -124,6 +125,7 @@ for i in range(2,Nt):
 #plt.legend()
 #plt.show()
 
+
 # Plot du midspan deflection
     
 plt.figure()
@@ -144,5 +146,16 @@ plt.ylabel('Deflection')
 plt.title('Deflection under walkers feet')
 plt.tight_layout()    
     
+# Plot de la déformée à t=0, 1/4, 1/2, 3/4 et 1 de la traversée du pont
+ListeT = [0,0.25,0.5,0.75,1.]
+kinstants = [int(k*L/v) for k in ListeT]
+plt.figure()
+for k in range(len(ListeT)):
+    plt.plot(x,y[kinstants[k],:],label=str(ListeT[k]))
+plt.xlabel('Horizontal axis x')
+plt.ylabel('Deflection (m)')
+plt.legend()
+plt.show()
+plt.tight_layout()
     
     
