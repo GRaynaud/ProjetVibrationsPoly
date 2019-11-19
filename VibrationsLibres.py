@@ -5,7 +5,7 @@ Test d'implantation d'un schéma numérique pour un problème de poutre 1D
 Cas de vibrations libres (pas de forçage)
 conditions initiales : y(x,0) = 0, dy/dt(x,0) = 1
 """
-
+# Test
 # Bibliotheques
 import numpy as np
 import matplotlib.pyplot as plt
@@ -75,9 +75,8 @@ plt.ylabel('Deflection (m)')
 plt.legend()
 plt.show()
 
-    
+
 plt.figure()
 plt.plot(t,y[:,int(0.5*Nx)])
 plt.xlabel('time t')
-plt.ylabel('Mid span deflection (m)')    
-    
+plt.ylabel('Mid span deflection (m)')
