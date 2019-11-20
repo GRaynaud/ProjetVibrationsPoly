@@ -22,9 +22,9 @@ plt.rc('figure',titlesize=24)
 L = 10. #m
 Nx = 100 # nombre de points pour discrétiser l'axe x
 dx = L/Nx
-alpha0 = 0.6 #rad, angle d'attaque vertical
+alpha0 = 0.5 #rad, angle d'attaque vertical
 v = 1.3 #m/s vitesse du pieton
-lj = 0.6 #m longueur d'une jambe
+lj = 0.8 #m longueur d'une jambe
 dpas = 2*lj*np.sin(alpha0) #m taille d'un pas
 mg = 1e3 #N poids du marcheur
 
@@ -35,7 +35,7 @@ delta = e/3 #taille de l'appui
 # Description des variables temporelles
 
 Tmax = 10
-dt = 0.01
+dt = 0.2
 Nt = int(Tmax/dt)
 t = np.linspace(0,Tmax,Nt)
 
@@ -75,54 +75,54 @@ for k in range(Nt):
     plt.close()
 
 
-## Test animation
-#fig = plt.figure()
-#ax = fig.gca()
-#ax.axis('equal')
-## Plot contour rectangle + appui
-##rectangle
-#ax.hlines(0,-e, L+e)
-#ax.hlines(e,-e, L+e)
-#ax.vlines(-e,0,e)
-#ax.vlines(L+e,0,e)
-##appui gauche
-#ax.plot([0, 0.5*delta],[0,-delta],c='black')
-#ax.plot([-0.5*delta, 0],[-delta,0],c='black')
-#ax.plot([-0.5*delta, 0.5*delta],[-delta,-delta],c='black')
-##appui droite
-#ax.plot([L+0, L+0.5*delta],[0,-delta],c='black')
-#ax.plot([L-0.5*delta, L+0],[-delta,0],c='black')
-#ax.plot([L-0.5*delta, L+0.5*delta],[-delta,-delta],c='black')
-#
-#global line
-#line = plt.arrow(0,0,0,0)
-#ax.add_patch(line)
-#
-#def init():
-##    line.set_data([], [])
-##    global line
-#    ax.patches.pop(0)
-#    line = plt.Arrow(0,0,0,0)
-#    ax.add_patch(line)
-#    return (line,)
-#    
-#def animatecontinue(i):
-##    global line
-##    ax.patches.remove(line)
-#    ax.patches.pop(0)
-#    xarrow = v*t[i]
-#    yarrow = 0.5*(1+np.cos(alpha0)) + 0.5*(1-np.cos(alpha0))*np.cos(v*t[i]/dpas)
-#    line = plt.arrow(xarrow,1.1*e+yarrow,0,-yarrow, shape='full', length_includes_head=True,
-#          head_width=0.1, head_length=0.1)
-#    ax.add_patch(line)
-#    return (line,)
-#anim = animation.FuncAnimation(fig, animatecontinue, init_func=init, frames=Nt, interval=25, blit=True)
-#
-##
-##Writer = animation.writers['ffmpeg']
-##writer = Writer(fps=25, bitrate=1800)
-##anim.save('AnimContinue.mp4', writer=writer)
-#
+# Test animation
+fig = plt.figure()
+ax = fig.gca()
+ax.axis('equal')
+# Plot contour rectangle + appui
+#rectangle
+ax.hlines(0,-e, L+e)
+ax.hlines(e,-e, L+e)
+ax.vlines(-e,0,e)
+ax.vlines(L+e,0,e)
+#appui gauche
+ax.plot([0, 0.5*delta],[0,-delta],c='black')
+ax.plot([-0.5*delta, 0],[-delta,0],c='black')
+ax.plot([-0.5*delta, 0.5*delta],[-delta,-delta],c='black')
+#appui droite
+ax.plot([L+0, L+0.5*delta],[0,-delta],c='black')
+ax.plot([L-0.5*delta, L+0],[-delta,0],c='black')
+ax.plot([L-0.5*delta, L+0.5*delta],[-delta,-delta],c='black')
+
+global line
+line = plt.arrow(0,0,0,0)
+ax.add_patch(line)
+
+def init():
+#    line.set_data([], [])
+#    global line
+    ax.patches.pop(0)
+    line = plt.Arrow(0,0,0,0)
+    ax.add_patch(line)
+    return (line,)
+    
+def animatecontinue(i):
+#    global line
+#    ax.patches.remove(line)
+    ax.patches.pop(0)
+    xarrow = v*t[i]
+    yarrow = 0.5*(1+np.cos(alpha0)) + 0.5*(1-np.cos(alpha0))*np.cos(v*t[i]/dpas)
+    line = plt.arrow(xarrow,1.1*e+yarrow,0,-yarrow, shape='full', length_includes_head=True,
+          head_width=0.1, head_length=0.1)
+    ax.add_patch(line)
+    return (line,)
+anim = animation.FuncAnimation(fig, animatecontinue, init_func=init, frames=Nt, interval=25, blit=True)
+
+
+Writer = animation.writers['ffmpeg']
+writer = Writer(fps=25, bitrate=1800)
+anim.save('AnimContinue.mp4', writer=writer)
+
 #anim.save('AnimContinue.gif', writer='imagemagick', fps=25)
 
 
@@ -161,3 +161,58 @@ for k in range(Nt):
     
     plt.savefig(repertoire_f_discontinue+'%03d.png' % (k))
     plt.close()
+
+
+
+# Test animation
+fig = plt.figure()
+ax = fig.gca()
+ax.axis('equal')
+# Plot contour rectangle + appui
+#rectangle
+ax.hlines(0,-e, L+e)
+ax.hlines(e,-e, L+e)
+ax.vlines(-e,0,e)
+ax.vlines(L+e,0,e)
+#appui gauche
+ax.plot([0, 0.5*delta],[0,-delta],c='black')
+ax.plot([-0.5*delta, 0],[-delta,0],c='black')
+ax.plot([-0.5*delta, 0.5*delta],[-delta,-delta],c='black')
+#appui droite
+ax.plot([L+0, L+0.5*delta],[0,-delta],c='black')
+ax.plot([L-0.5*delta, L+0],[-delta,0],c='black')
+ax.plot([L-0.5*delta, L+0.5*delta],[-delta,-delta],c='black')
+
+global line
+line = plt.arrow(0,0,0,0)
+ax.add_patch(line)
+
+def init():
+#    line.set_data([], [])
+#    global line
+    ax.patches.pop(0)
+    line = plt.Arrow(0,0,0,0)
+    ax.add_patch(line)
+    return (line,)
+    
+def animatediscontinue(i):
+#    global line
+#    ax.patches.remove(line)
+    ax.patches.pop(0)
+    alpha = alpha0*(2*(v*t[i]/dpas - np.floor(v*t[i]/dpas))-1)
+    xarrow = np.floor(v*t[i]/dpas)*dpas + np.sin(alpha)*lj
+    yarrow = 1.1*e + lj*np.cos(alpha)
+    dx = - lj*np.sin(alpha)
+    dy = -lj*np.cos(alpha)    
+    line = plt.arrow(xarrow,yarrow,dx,dy, shape='full', length_includes_head=True,
+          head_width=0.1, head_length=0.1)
+    ax.add_patch(line)
+    return (line,)
+anim = animation.FuncAnimation(fig, animatediscontinue, init_func=init, frames=Nt, interval=25, blit=True)
+
+
+Writer = animation.writers['ffmpeg']
+writer = Writer(fps=25, bitrate=1800)
+anim.save('AnimDiscontinue.mp4', writer=writer)
+
+#anim.save('AnimContinue.gif', writer='imagemagick', fps=25)
