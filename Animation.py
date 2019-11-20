@@ -24,7 +24,7 @@ Nx = 100 # nombre de points pour discrétiser l'axe x
 dx = L/Nx
 alpha0 = 0.5 #rad, angle d'attaque vertical
 v = 1.3 #m/s vitesse du pieton
-lj = 0.8 #m longueur d'une jambe
+lj = 1.3 #m longueur d'une jambe
 dpas = 2*lj*np.sin(alpha0) #m taille d'un pas
 mg = 1e3 #N poids du marcheur
 
