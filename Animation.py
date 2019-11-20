@@ -35,7 +35,7 @@ delta = e/3 #taille de l'appui
 # Description des variables temporelles
 
 Tmax = 10
-dt = 0.05
+dt = 0.01
 Nt = int(Tmax/dt)
 t = np.linspace(0,Tmax,Nt)
 
