@@ -126,6 +126,12 @@ for k in range(Nt):
 #anim.save('AnimContinue.gif', writer='imagemagick', fps=25)
 
 
+
+# Version discontinue
+    
+# A exporter avec ffmpeg 
+# ffmpeg -framerate 45 -start_number 0 -i File_%03d.png -vframes 1000 -vcodec libx264 -crf 25 -pix_fmt yuv420p out.avi
+
 for k in range(Nt):
     plt.figure()
     plt.axis('equal')
