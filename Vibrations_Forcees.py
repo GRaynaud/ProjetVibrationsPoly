@@ -36,7 +36,7 @@ t = np.linspace(0,Tmax,Nt)
 
 # Description des variables dynamiques
 
-EI = 1e5
+EI = 1e6
 rhoA = 1e2
 
 # Conditions initiales
@@ -105,7 +105,7 @@ f(t) : vecteur dont les coordonnées sont f(x,t) --> excitation. Choisir au choi
 '''
 
 for i in range(2,Nt):
-    X = 2.*y[i-1,:] - y[i-2,:] - 0.5*(dt**2)*(EI/rhoA)*np.dot(A,y[i-1,:]) + (dt)**2/rhoA * f1(x,i*dt)
+    X = 2.*y[i-1,:] - y[i-2,:] - 0.5*(dt**2)*(EI/rhoA)*np.dot(A,y[i-1,:]) + (dt)**2/rhoA * f1 (x,i*dt)
     y[i,:] = np.dot(invB,X)
 
 
