@@ -18,18 +18,18 @@ plt.rc('figure',titlesize=24)
 
 # Description des variables geometriques
 
-L = 10. #m
+L = 11. #m - valeur article
 Nx = 400 # nombre de points pour discrétiser l'axe x
 dx = L/Nx
-alpha0 = 0.3 #rad, angle d'attaque vertical
-v = 1 #m/s vitesse du pieton
+alpha0 = (90-69)*np.pi/180. #rad, angle d'attaque vertical, valeur article
+v = 1.2 #m/s vitesse du pieton
 lj = 0.5 #m longueur d'une jambe
 dpas = 2*lj*np.sin(alpha0) #m taille d'un pas
 mg = 80*9.81 #N poids du marcheur - valeur article
 
 # Description des variables temporelles
 
-Tmax = 10
+Tmax = L/v
 dt = 0.001
 Nt = int(Tmax/dt)
 t = np.linspace(0,Tmax,Nt)
@@ -48,7 +48,7 @@ dty0 = 0.1*np.sin(np.pi*x/L)
 # Conteneur pour la solution
 y = np.zeros((Nt,Nx))
 y[0,:] = y0
-y[1,:] = y0 + dt*dty0
+y[1,:] = y0 #+ dt*dty0
 
 ###################################
 # Construction de la derivee 4eme en espace - operateur du membre de droite
@@ -105,7 +105,7 @@ f(t) : vecteur dont les coordonnées sont f(x,t) --> excitation. Choisir au choi
 '''
 
 for i in range(2,Nt):
-    X = 2.*y[i-1,:] - y[i-2,:] - 0.5*(dt**2)*(EI/rhoA)*np.dot(A,y[i-1,:]) + (dt)**2/rhoA * f1 (x,i*dt)
+    X = 2.*y[i-1,:] - y[i-2,:] - 0.5*(dt**2)*(EI/rhoA)*np.dot(A,y[i-1,:]) + (dt**2)/rhoA * f1(x,i*dt)
     y[i,:] = np.dot(invB,X)
 
 
@@ -132,6 +132,18 @@ def plot_midspan_deflection():
     plt.xlabel('time t')
     plt.ylabel('Deflection (m)')    
     plt.title('Mid Span Deflection')
+    plt.tight_layout()
+
+
+def plot_midspan_acceleration():
+    # Plot du midspan deflection
+    d = y[:,int(0.5*Nx)]
+    a = np.diff(np.diff(d))*1./dt**2
+    plt.figure()
+    plt.plot(t[2:],a)
+    plt.xlabel('time t')
+    plt.ylabel('Acceleration ($m/s^2$)')    
+    plt.title('Mid Span Acceleration')
     plt.tight_layout()
 
 def plot_deflection_under_feet():
