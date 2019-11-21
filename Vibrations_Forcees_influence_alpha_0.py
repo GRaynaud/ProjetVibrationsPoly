@@ -17,9 +17,11 @@ plt.rc('axes',titlesize=20)
 plt.rc('legend',fontsize=18)
 plt.rc('figure',titlesize=24)
 
-ListeTHETA_0_deg = np.linspace(65,70,10)
+ListeTHETA_0_deg = np.linspace(60,88,60)
 
-liste_peak_acc = []
+liste_peak_acc_f2 = []
+liste_peak_acc_f1 = []
+
 
 for theta_0 in ListeTHETA_0_deg:
     # Description des variables geometriques
@@ -27,8 +29,8 @@ for theta_0 in ListeTHETA_0_deg:
     L = 11. #m - valeur article
     Nx = 500 # nombre de points pour discrétiser l'axe x
     dx = L/Nx
-    alpha0 = (90-69)*np.pi/180. #rad, angle d'attaque vertical, valeur article
-    v = 1.4 #m/s vitesse du pieton
+    alpha0 = (90-theta_0)*np.pi/180. #rad, angle d'attaque vertical, valeur article
+    v = 1.2 #m/s vitesse du pieton
     lj = 0.5 #m longueur d'une jambe
     dpas = 2*lj*np.sin(alpha0) #m taille d'un pas
     mg = 80*9.81 #N poids du marcheur - valeur article
@@ -36,7 +38,7 @@ for theta_0 in ListeTHETA_0_deg:
     # Description des variables temporelles
     
     Tmax = L/v
-    dt = 0.0005
+    dt = 0.001
     Nt = int(Tmax/dt)
     t = np.linspace(0,Tmax,Nt)
     
@@ -109,7 +111,7 @@ for theta_0 in ListeTHETA_0_deg:
     f(t) : vecteur dont les coordonnées sont f(x,t) --> excitation. Choisir au choix f1 ou f2
     
     '''
-    
+    # Frcage discontinu
     for i in range(2,Nt):
         X = 2.*y[i-1,:] - y[i-2,:] - 0.5*(dt**2)*(EI/rhoA)*np.dot(A,y[i-1,:]) + (dt**2)/rhoA * f2(x,i*dt)
         y[i,:] = np.dot(invB,X)
@@ -120,12 +122,36 @@ for theta_0 in ListeTHETA_0_deg:
     b, a = scipy.signal.butter(3, f0) # paramètres du filtre pour couper les HF
     acc = scipy.signal.filtfilt(b,a,acc)
     
-    liste_peak_acc.append(max(abs(acc)))
-    print('-',end='')
+    liste_peak_acc_f2.append(max(abs(acc)))
+    
+    print('-', end='')
+    
+    # Forcage continu
+    y = np.zeros((Nt,Nx))
+    y[0,:] = y0
+    y[1,:] = y0 + dt*dty0
+    
+    for i in range(2,Nt):
+        X = 2.*y[i-1,:] - y[i-2,:] - 0.5*(dt**2)*(EI/rhoA)*np.dot(A,y[i-1,:]) + (dt**2)/rhoA * f1(x,i*dt)
+        y[i,:] = np.dot(invB,X)
+    
+    d = y[:,int(0.5*Nx)]
+    acc = np.diff(np.diff(d))*1./dt**2
+    f0 = 2*(np.pi/L)**2*np.sqrt(EI/rhoA) * dt
+    b, a = scipy.signal.butter(3, f0) # paramètres du filtre pour couper les HF
+    acc = scipy.signal.filtfilt(b,a,acc)
+    
+    liste_peak_acc_f1.append(max(abs(acc)))
+        
+    
+    
+    print(str(len(liste_peak_acc_f1)),end='')
 
 
 plt.figure()
-plt.plot(ListeTHETA_0_deg,liste_peak_acc,marker='o')
-plt.xlabel('Angle of attack $\theta_0$')
-plt.ylabel('Peak acceleration at midspan')
-    
+plt.plot(ListeTHETA_0_deg,liste_peak_acc_f1,marker='o',markerfacecolor='none', label='Forçage Continu')
+plt.plot(ListeTHETA_0_deg,liste_peak_acc_f2,marker='s',markerfacecolor='none', label='Forçage Discontinu')
+plt.xlabel('Angle of attack $\\theta_0$ (°)')
+plt.ylabel('Peak acceleration at midspan ($m.s^{-2}$)')
+plt.title('$v = '+str(v)+'$')
+plt.tight_layout()
