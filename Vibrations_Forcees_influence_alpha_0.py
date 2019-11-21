@@ -149,9 +149,10 @@ for theta_0 in ListeTHETA_0_deg:
 
 
 plt.figure()
-plt.plot(ListeTHETA_0_deg,liste_peak_acc_f1,marker='o',markerfacecolor='none', label='Forçage Continu')
+#plt.plot(ListeTHETA_0_deg,liste_peak_acc_f1,marker='o',markerfacecolor='none', label='Forçage Continu')
 plt.plot(ListeTHETA_0_deg,liste_peak_acc_f2,marker='s',markerfacecolor='none', label='Forçage Discontinu')
 plt.xlabel('Angle of attack $\\theta_0$ (°)')
 plt.ylabel('Peak acceleration at midspan ($m.s^{-2}$)')
 plt.title('$v = '+str(v)+'$')
+plt.legend()
 plt.tight_layout()
