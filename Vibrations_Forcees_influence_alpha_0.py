@@ -30,8 +30,8 @@ for theta_0 in ListeTHETA_0_deg:
     Nx = 500 # nombre de points pour discrétiser l'axe x
     dx = L/Nx
     alpha0 = (90-theta_0)*np.pi/180. #rad, angle d'attaque vertical, valeur article
-    v = 1.2 #m/s vitesse du pieton
-    lj = 0.5 #m longueur d'une jambe
+    v = 1.4 #m/s vitesse du pieton
+    lj = 1 #m longueur d'une jambe
     dpas = 2*lj*np.sin(alpha0) #m taille d'un pas
     mg = 80*9.81 #N poids du marcheur - valeur article
     
@@ -126,26 +126,26 @@ for theta_0 in ListeTHETA_0_deg:
     
     print('-', end='')
     
-    # Forcage continu
-    y = np.zeros((Nt,Nx))
-    y[0,:] = y0
-    y[1,:] = y0 + dt*dty0
-    
-    for i in range(2,Nt):
-        X = 2.*y[i-1,:] - y[i-2,:] - 0.5*(dt**2)*(EI/rhoA)*np.dot(A,y[i-1,:]) + (dt**2)/rhoA * f1(x,i*dt)
-        y[i,:] = np.dot(invB,X)
-    
-    d = y[:,int(0.5*Nx)]
-    acc = np.diff(np.diff(d))*1./dt**2
-    f0 = 2*(np.pi/L)**2*np.sqrt(EI/rhoA) * dt
-    b, a = scipy.signal.butter(3, f0) # paramètres du filtre pour couper les HF
-    acc = scipy.signal.filtfilt(b,a,acc)
-    
-    liste_peak_acc_f1.append(max(abs(acc)))
+#    # Forcage continu
+#    y = np.zeros((Nt,Nx))
+#    y[0,:] = y0
+#    y[1,:] = y0 + dt*dty0
+#    
+#    for i in range(2,Nt):
+#        X = 2.*y[i-1,:] - y[i-2,:] - 0.5*(dt**2)*(EI/rhoA)*np.dot(A,y[i-1,:]) + (dt**2)/rhoA * f1(x,i*dt)
+#        y[i,:] = np.dot(invB,X)
+#    
+#    d = y[:,int(0.5*Nx)]
+#    acc = np.diff(np.diff(d))*1./dt**2
+#    f0 = 2*(np.pi/L)**2*np.sqrt(EI/rhoA) * dt
+#    b, a = scipy.signal.butter(3, f0) # paramètres du filtre pour couper les HF
+#    acc = scipy.signal.filtfilt(b,a,acc)
+#    
+#    liste_peak_acc_f1.append(max(abs(acc)))
         
     
     
-    print(str(len(liste_peak_acc_f1)),end='')
+    print(str(len(liste_peak_acc_f2)),end='')
 
 
 plt.figure()
@@ -153,6 +153,6 @@ plt.figure()
 plt.plot(ListeTHETA_0_deg,liste_peak_acc_f2,marker='s',markerfacecolor='none', label='Forçage Discontinu')
 plt.xlabel('Angle of attack $\\theta_0$ (°)')
 plt.ylabel('Peak acceleration at midspan ($m.s^{-2}$)')
-plt.title('$v = '+str(v)+'$')
-plt.legend()
+plt.title('$v = '+str(v)+'$ - Forçage discontinu')
+#plt.legend()
 plt.tight_layout()

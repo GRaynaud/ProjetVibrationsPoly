@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Code Python
-Test d'implantation d'un schéma numérique pour un problème de poutre 1D
-Cas de vibrations forcees par le modele 1 (continue)
+Implantation d'un schéma numérique pour un problème de poutre 1D
+Cas de vibrations forcees
 conditions initiales : y(x,0) = 0, dy/dt(x,0) = 0
 """
 #####################################
@@ -23,8 +22,8 @@ L = 11. #m - valeur article
 Nx = 500 # nombre de points pour discrétiser l'axe x
 dx = L/Nx
 alpha0 = (90-69)*np.pi/180. #rad, angle d'attaque vertical, valeur article
-v = 1.4 #m/s vitesse du pieton
-lj = 0.5 #m longueur d'une jambe
+v = 1.2 #m/s vitesse du pieton
+lj = 1 #m longueur d'une jambe
 dpas = 2*lj*np.sin(alpha0) #m taille d'un pas
 mg = 80*9.81 #N poids du marcheur - valeur article
 
@@ -78,7 +77,7 @@ def f2(xpos,tpos):
     # on remplace le dirac par une gaussienne de variance tres faible
     sigma = dx
     fvalue = -1.*mg*np.cos(alpha0*(2*(v*tpos/dpas - np.floor(v*tpos/dpas))-1))
-    fvalue *= 1./(sigma*np.sqrt(2*np.pi)) * np.exp(-(xpos-dpas*np.floor(v*tpos/dpas))**2/(2*sigma**2))
+    fvalue *= 1./(sigma*np.sqrt(2*np.pi)) * np.exp(-(xpos-dpas*np.floor(v*tpos/dpas) -dx)**2/(2*sigma**2))
     return fvalue
 
 # Excitation continue --> Cas 1
@@ -106,7 +105,7 @@ f(t) : vecteur dont les coordonnées sont f(x,t) --> excitation. Choisir au choi
 '''
 
 for i in range(2,Nt):
-    X = 2.*y[i-1,:] - y[i-2,:] - 0.5*(dt**2)*(EI/rhoA)*np.dot(A,y[i-1,:]) + (dt**2)/rhoA * f1(x,i*dt)
+    X = 2.*y[i-1,:] - y[i-2,:] - 0.5*(dt**2)*(EI/rhoA)*np.dot(A,y[i-1,:]) + (dt**2)/rhoA * f2(x,i*dt)
     y[i,:] = np.dot(invB,X)
 
 
@@ -127,11 +126,10 @@ def plot_snapshots():
 
 def plot_midspan_deflection():
     # Plot du midspan deflection
-        
     plt.figure()
-    plt.plot(t,y[:,int(0.5*Nx)])
+    plt.plot(t,1e3*y[:,int(0.5*Nx)])
     plt.xlabel('time t')
-    plt.ylabel('Deflection (m)')    
+    plt.ylabel('Deflection ($\\times 10^{-3}m$)')    
     plt.title('Mid Span Deflection')
     plt.tight_layout()
 
@@ -162,7 +160,6 @@ def plot_midspan_acceleration():
 
 def plot_deflection_under_feet():
     # Plot de la deflection au niveau du pieton
-    
     ypieton = [y[k,min(int(v*k*dt/dx),Nx-1)] for k in range(Nt)]
     plt.figure()
     plt.plot(t,ypieton)
@@ -193,8 +190,6 @@ def plot_fft():
     f0 = 2*(np.pi/L)**2*np.sqrt(EI/rhoA) * dt
     b, a = scipy.signal.butter(3, f0) # paramètres du filtre pour couper les HF
     signal = scipy.signal.filtfilt(b,a,signal)
-    plt.plot(signal)
-    
     fourier = np.fft.fft(signal)
     n = signal.size
     freq = np.fft.fftfreq(n, d=dt)
@@ -202,8 +197,12 @@ def plot_fft():
 #    plt.plot(freq, fourier.real, label="real")
 #    plt.plot(freq, fourier.imag, label="imag")
     plt.plot(freq,np.abs(fourier), label="Norme")
+    plt.xlabel('Frequency $f$ (Hz)')
+    plt.title('Fast Fourier Transform')
+    plt.xlim(0,6)
     plt.legend()
     plt.show()
+    plt.tight_layout()
 
 plot_midspan_acceleration()
 plot_midspan_deflection()
