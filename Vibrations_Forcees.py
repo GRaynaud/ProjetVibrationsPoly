@@ -19,25 +19,25 @@ plt.rc('figure',titlesize=24)
 # Description des variables geometriques
 
 L = 10. #m
-Nx = 100 # nombre de points pour discrétiser l'axe x
+Nx = 400 # nombre de points pour discrétiser l'axe x
 dx = L/Nx
 alpha0 = 0.3 #rad, angle d'attaque vertical
 v = 1 #m/s vitesse du pieton
 lj = 0.5 #m longueur d'une jambe
 dpas = 2*lj*np.sin(alpha0) #m taille d'un pas
-mg = 1e3 #N poids du marcheur
+mg = 80*9.81 #N poids du marcheur - valeur article
 
 # Description des variables temporelles
 
 Tmax = 10
-dt = 0.005
+dt = 0.001
 Nt = int(Tmax/dt)
 t = np.linspace(0,Tmax,Nt)
 
 # Description des variables dynamiques
 
-EI = 1e6
-rhoA = 1e2
+EI = 1.64e8 #valeur article
+rhoA = 1.364e3 #valeur article
 
 # Conditions initiales
 x = np.linspace(0,L,Nx)
@@ -113,49 +113,62 @@ for i in range(2,Nt):
 # Plot
 
 
-# Plot d'instantanes
+def plot_snapshots():
+    # Plot d'instantanes
+    plt.figure()
+    for i in range(Nt):
+        if i%10 == 0:
+            plt.plot(x,y[i,:], label=str(i))
+    plt.xlabel('Horizontal axis x')
+    plt.ylabel('Deflection (m)')
+    plt.legend()
+    plt.show()
 
+def plot_midspan_deflection():
+    # Plot du midspan deflection
+        
+    plt.figure()
+    plt.plot(t,y[:,int(0.5*Nx)])
+    plt.xlabel('time t')
+    plt.ylabel('Deflection (m)')    
+    plt.title('Mid Span Deflection')
+    plt.tight_layout()
 
-#plt.figure()
-#for i in range(Nt):
-#    if i%10 == 0:
-#        plt.plot(x,y[i,:], label=str(i))
-#plt.xlabel('Horizontal axis x')
-#plt.ylabel('Deflection (m)')
-#plt.legend()
-#plt.show()
-
-
-# Plot du midspan deflection
+def plot_deflection_under_feet():
+    # Plot de la deflection au niveau du pieton
     
-plt.figure()
-plt.plot(t,y[:,int(0.5*Nx)])
-plt.xlabel('time t')
-plt.ylabel('Deflection (m)')    
-plt.title('Mid Span Deflection')
-plt.tight_layout()
-
-
-# Plot de la deflection au niveau du pieton
-
-ypieton = [y[k,min(int(v*k*dt/dx),Nx-1)] for k in range(Nt)]
-plt.figure()
-plt.plot(t,ypieton)
-plt.xlabel('time t, position x = vt')
-plt.ylabel('Deflection')
-plt.title('Deflection under walkers feet')
-plt.tight_layout()    
+    ypieton = [y[k,min(int(v*k*dt/dx),Nx-1)] for k in range(Nt)]
+    plt.figure()
+    plt.plot(t,ypieton)
+    plt.xlabel('time t, position x = vt')
+    plt.ylabel('Deflection')
+    plt.title('Deflection under walkers feet')
+    plt.tight_layout()    
     
-# Plot de la déformée à t=0, 1/4, 1/2, 3/4 et 1 de la traversée du pont
-ListeT = [0,0.25,0.5,0.75,1.]
-kinstants = [int(k*L/v) for k in ListeT]
-plt.figure()
-for k in range(len(ListeT)):
-    plt.plot(x,y[kinstants[k],:],label=str(ListeT[k]))
-plt.xlabel('Horizontal axis x')
-plt.ylabel('Deflection (m)')
-plt.legend()
-plt.show()
-plt.tight_layout()
+def plot_deformee_qq_instants():
+    # Plot de la déformée à t=0, 1/4, 1/2, 3/4 et 1 de la traversée du pont
+    ListeT = [0,0.25,0.5,0.75,1.]
+    kinstants = [int(k*L/v) for k in ListeT]
+    plt.figure()
+    for k in range(len(ListeT)):
+        plt.plot(x,y[kinstants[k],:],label=str(ListeT[k]))
+    plt.xlabel('Horizontal axis x')
+    plt.ylabel('Deflection (m)')
+    plt.legend()
+    plt.show()
+    plt.tight_layout()
     
-    
+def plot_fft():
+    # FFT
+    signal = y[:,int(0.5*Nx)]
+    fourier = np.fft.fft(signal)
+    n = signal.size
+    freq = np.fft.fftfreq(n, d=dt)
+    plt.figure()
+    plt.plot(freq, fourier.real, label="real")
+    plt.plot(freq, fourier.imag, label="imag")
+    plt.legend()
+    plt.show()
+
+plot_midspan_deflection()
+plot_fft()
