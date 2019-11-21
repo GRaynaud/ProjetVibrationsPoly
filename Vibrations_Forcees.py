@@ -9,6 +9,7 @@ conditions initiales : y(x,0) = 0, dy/dt(x,0) = 0
 # Bibliotheques
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy.signal
 plt.rc('text', usetex=True)
 plt.rc('font', family='serif')
 plt.rc('font', size=18)
@@ -19,10 +20,10 @@ plt.rc('figure',titlesize=24)
 # Description des variables geometriques
 
 L = 11. #m - valeur article
-Nx = 400 # nombre de points pour discrétiser l'axe x
+Nx = 500 # nombre de points pour discrétiser l'axe x
 dx = L/Nx
 alpha0 = (90-69)*np.pi/180. #rad, angle d'attaque vertical, valeur article
-v = 1.2 #m/s vitesse du pieton
+v = 1.4 #m/s vitesse du pieton
 lj = 0.5 #m longueur d'une jambe
 dpas = 2*lj*np.sin(alpha0) #m taille d'un pas
 mg = 80*9.81 #N poids du marcheur - valeur article
@@ -30,7 +31,7 @@ mg = 80*9.81 #N poids du marcheur - valeur article
 # Description des variables temporelles
 
 Tmax = L/v
-dt = 0.001
+dt = 0.0005
 Nt = int(Tmax/dt)
 t = np.linspace(0,Tmax,Nt)
 
@@ -42,13 +43,13 @@ rhoA = 1.364e3 #valeur article
 # Conditions initiales
 x = np.linspace(0,L,Nx)
 y0 = np.zeros(Nx)
-dty0 = 0.1*np.sin(np.pi*x/L)
+dty0 = np.zeros(Nx)
 
 ####################################
 # Conteneur pour la solution
 y = np.zeros((Nt,Nx))
 y[0,:] = y0
-y[1,:] = y0 #+ dt*dty0
+y[1,:] = y0 + dt*dty0
 
 ###################################
 # Construction de la derivee 4eme en espace - operateur du membre de droite
@@ -105,7 +106,7 @@ f(t) : vecteur dont les coordonnées sont f(x,t) --> excitation. Choisir au choi
 '''
 
 for i in range(2,Nt):
-    X = 2.*y[i-1,:] - y[i-2,:] - 0.5*(dt**2)*(EI/rhoA)*np.dot(A,y[i-1,:]) + (dt**2)/rhoA * f1(x,i*dt)
+    X = 2.*y[i-1,:] - y[i-2,:] - 0.5*(dt**2)*(EI/rhoA)*np.dot(A,y[i-1,:]) + (dt**2)/rhoA * f2(x,i*dt)
     y[i,:] = np.dot(invB,X)
 
 
@@ -134,13 +135,26 @@ def plot_midspan_deflection():
     plt.title('Mid Span Deflection')
     plt.tight_layout()
 
+def plot_midspan_speed():
+    # Plot du midspan deflection
+    d = y[:,int(0.5*Nx)]
+    v = np.diff(d)*1./dt
+    plt.figure()
+    plt.plot(t[2:],v)
+    plt.xlabel('time t')
+    plt.ylabel('Speed ($m/s$)')    
+    plt.title('Mid Span Speed')
+    plt.tight_layout()
 
 def plot_midspan_acceleration():
     # Plot du midspan deflection
     d = y[:,int(0.5*Nx)]
-    a = np.diff(np.diff(d))*1./dt**2
+    acc = np.diff(np.diff(d))*1./dt**2
+    f0 = 2*(np.pi/L)**2*np.sqrt(EI/rhoA) * dt
+    b, a = scipy.signal.butter(3, f0) # paramètres du filtre pour couper les HF
+    acc = scipy.signal.filtfilt(b,a,acc)
     plt.figure()
-    plt.plot(t[2:],a)
+    plt.plot(t[2:],acc)
     plt.xlabel('time t')
     plt.ylabel('Acceleration ($m/s^2$)')    
     plt.title('Mid Span Acceleration')
@@ -172,15 +186,30 @@ def plot_deformee_qq_instants():
     
 def plot_fft():
     # FFT
-    signal = y[:,int(0.5*Nx)]
+    signal = np.diff(np.diff(y[:,int(0.5*Nx)]))*1./dt**2
+    signal = np.diff(y[:,int(0.5*Nx)])/dt
+    signal = y[:,int(0.5*Nx)] - np.mean(y[:,int(0.5*Nx)]) # on enleve la valeur moyenne pour bien faire ressortir les basses fréquences
+    
+    f0 = 2*(np.pi/L)**2*np.sqrt(EI/rhoA) * dt
+    b, a = scipy.signal.butter(3, f0) # paramètres du filtre pour couper les HF
+    signal = scipy.signal.filtfilt(b,a,signal)
+    plt.plot(signal)
+    
     fourier = np.fft.fft(signal)
     n = signal.size
     freq = np.fft.fftfreq(n, d=dt)
     plt.figure()
-    plt.plot(freq, fourier.real, label="real")
-    plt.plot(freq, fourier.imag, label="imag")
+#    plt.plot(freq, fourier.real, label="real")
+#    plt.plot(freq, fourier.imag, label="imag")
+    plt.plot(freq,np.abs(fourier), label="Norme")
     plt.legend()
     plt.show()
 
+plot_midspan_acceleration()
 plot_midspan_deflection()
 plot_fft()
+
+print('Natural frequencies : ')
+print('Omega_1 : %.3e rd/s (%.3e Hz)' % ((np.pi/L)**2*np.sqrt(EI/rhoA), (np.pi/L)**2*np.sqrt(EI/rhoA)/(2*np.pi)))
+print('Alpha_1 : %.3e rd/s (%.3e Hz)' % (np.pi*v/L, 0.5*v/L))
+print('Beta : %.3e rd/s (%.3e Hz)' % (2*np.pi*v/dpas, v/dpas))
