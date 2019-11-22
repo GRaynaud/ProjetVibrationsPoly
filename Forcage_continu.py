@@ -9,12 +9,12 @@ Cas de vibrations forcees par le modele 1 (continue)
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import axes3d
-plt.rc('text', usetex=True)
-plt.rc('font', family='serif')
-plt.rc('font', size=18)
-plt.rc('axes',titlesize=20)
-plt.rc('legend',fontsize=18)
-plt.rc('figure',titlesize=24)
+# plt.rc('text', usetex=True)
+# plt.rc('font', family='serif')
+# plt.rc('font', size=18)
+# plt.rc('axes',titlesize=20)
+# plt.rc('legend',fontsize=18)
+# plt.rc('figure',titlesize=24)
 
 
 # Description des variables geometriques
@@ -175,11 +175,11 @@ def plot_evolution():
         plt.scatter(x_pieton,1e3*y_pieton)
         plt.xlabel('x (m)')
         plt.ylabel('y ($\times 10^{-3}$m)')
-        plt.title('$t=$%.2e' %t)
+        plt.title('$t=$%s s' %round(t,2))
         axes = plt.gca()
         axes.set_ylim([-ymaj,ymaj])
         plt.pause(dt)
-        plt.savefig('File_evolution_%03d.png' % i)
+        # plt.savefig('File_evolution_%03d.png' % i)
 
 ####################################
 # On calcule l'amplitude max du pont
