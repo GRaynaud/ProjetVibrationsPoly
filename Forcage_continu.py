@@ -9,6 +9,13 @@ Cas de vibrations forcees par le modele 1 (continue)
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import axes3d
+plt.rc('text', usetex=True)
+plt.rc('font', family='serif')
+plt.rc('font', size=18)
+plt.rc('axes',titlesize=20)
+plt.rc('legend',fontsize=18)
+plt.rc('figure',titlesize=24)
+
 
 # Description des variables geometriques
 L = 11. #m - valeur article
@@ -153,7 +160,7 @@ def plot_evolution():
     dt = Tfinal/Nt
     tab_x = np.linspace(0,L,Nx)
     tab_t = np.linspace(0,Tfinal,Nt)
-    ymaj = y_maj(alpha0,v)
+    ymaj = 1e3*y_maj(alpha0,v)
     for i in range(Nt):
         tab_y = np.zeros(Nx)
         t = tab_t[i]
@@ -164,10 +171,10 @@ def plot_evolution():
         y_pieton = y(x_pieton,t,alpha0,v)
         plt.figure(1)
         plt.clf()
-        plt.plot(tab_x,tab_y)
-        plt.scatter(x_pieton,y_pieton)
+        plt.plot(tab_x,1e3*tab_y)
+        plt.scatter(x_pieton,1e3*y_pieton)
         plt.xlabel('x (m)')
-        plt.ylabel('y (m)')
+        plt.ylabel('y ($\times 10^{-3}$m)')
         plt.title('$t=$%s' %t)
         axes = plt.gca()
         axes.set_ylim([-ymaj,ymaj])
