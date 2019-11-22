@@ -89,8 +89,8 @@ def vitesse_res():
 
 def couple_res():
     nb_alpha = 90
-    alpha = np.linspace(1,90,nb_alpha)
-    vmax = 10
+    alpha = np.linspace(1,70,nb_alpha)
+    vmax = 4
     plt.figure()
     for k in range(1,kmax+1):
         omegak = omega(k)
