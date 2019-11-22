@@ -175,10 +175,11 @@ def plot_evolution():
         plt.scatter(x_pieton,1e3*y_pieton)
         plt.xlabel('x (m)')
         plt.ylabel('y ($\times 10^{-3}$m)')
-        plt.title('$t=$%s' %t)
+        plt.title('$t=$%.2e' %t)
         axes = plt.gca()
         axes.set_ylim([-ymaj,ymaj])
         plt.pause(dt)
+        plt.savefig('File_evolution_%03d.png' % i)
 
 ####################################
 # On calcule l'amplitude max du pont
