@@ -156,7 +156,7 @@ def y_maj(alpha0,v):
 
 def plot_evolution():
     Nx = 100
-    Nt = 100
+    Nt = 400
     dt = Tfinal/Nt
     tab_x = np.linspace(0,L,Nx)
     tab_t = np.linspace(0,Tfinal,Nt)
@@ -179,8 +179,8 @@ def plot_evolution():
         axes = plt.gca()
         axes.set_ylim([-ymaj,ymaj])
         plt.tight_layout()
-        plt.pause(dt)
-        plt.savefig('File_evolution_%03d.png' % i)
+#        plt.pause(dt)
+        plt.savefig('PlotEvolution/File_evolution_%03d.png' % i)
 
 ####################################
 # On calcule l'amplitude max du pont

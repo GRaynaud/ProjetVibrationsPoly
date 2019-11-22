@@ -183,8 +183,8 @@ def plot_deformee_qq_instants():
     
 def plot_fft():
     # FFT
-    signal = np.diff(np.diff(y[:,int(0.5*Nx)]))*1./dt**2
-    signal = np.diff(y[:,int(0.5*Nx)])/dt
+#    signal = np.diff(np.diff(y[:,int(0.5*Nx)]))*1./dt**2
+#    signal = np.diff(y[:,int(0.5*Nx)])/dt
     signal = y[:,int(0.5*Nx)] - np.mean(y[:,int(0.5*Nx)]) # on enleve la valeur moyenne pour bien faire ressortir les basses fréquences
     
     f0 = 2*(np.pi/L)**2*np.sqrt(EI/rhoA) * dt
