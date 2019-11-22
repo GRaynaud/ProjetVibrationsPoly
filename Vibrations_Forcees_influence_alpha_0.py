@@ -17,7 +17,7 @@ plt.rc('axes',titlesize=20)
 plt.rc('legend',fontsize=18)
 plt.rc('figure',titlesize=24)
 
-ListeTHETA_0_deg = np.linspace(60,88,60)
+ListeTHETA_0_deg = np.linspace(66,70,15)
 
 liste_peak_acc_f2 = []
 liste_peak_acc_f1 = []
@@ -30,7 +30,7 @@ for theta_0 in ListeTHETA_0_deg:
     Nx = 500 # nombre de points pour discrétiser l'axe x
     dx = L/Nx
     alpha0 = (90-theta_0)*np.pi/180. #rad, angle d'attaque vertical, valeur article
-    v = 1.4 #m/s vitesse du pieton
+    v = 1.25 #m/s vitesse du pieton
     lj = 1 #m longueur d'une jambe
     dpas = 2*lj*np.sin(alpha0) #m taille d'un pas
     mg = 80*9.81 #N poids du marcheur - valeur article
