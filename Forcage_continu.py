@@ -9,12 +9,12 @@ Cas de vibrations forcees par le modele 1 (continue)
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import axes3d
-plt.rc('text', usetex=True)
-plt.rc('font', family='serif')
-plt.rc('font', size=18)
-plt.rc('axes',titlesize=20)
-plt.rc('legend',fontsize=18)
-plt.rc('figure',titlesize=24)
+# plt.rc('text', usetex=True)
+# plt.rc('font', family='serif')
+# plt.rc('font', size=18)
+# plt.rc('axes',titlesize=20)
+# plt.rc('legend',fontsize=18)
+# plt.rc('figure',titlesize=24)
 
 
 # Description des variables geometriques
@@ -67,8 +67,9 @@ def angle_res():
     plt.figure()
     for k in range(1,kmax+1):
         alpha = np.arcsin(C/abs(omega(k) - Omega(k,v))) * 180/np.pi
-        plt.plot([alpha,alpha],[0,1/k])
-    plt.xlabel('Alpha_0 (°)')
+        theta = 90 - alpha
+        plt.plot([theta,theta],[0,1/k])
+    plt.xlabel('Angle of attack theta_0 (°)')
     plt.show()
 
 ####################################
@@ -88,7 +89,7 @@ def vitesse_res():
             plt.plot([v2,v2],[0,1/k])
         if v3>0 and v3<vmax:
             plt.plot([v3,v3],[0,1/k])
-    plt.xlabel('v (m/s)')
+    plt.xlabel('Pedestrian velocity (m/s)')
     plt.show()
 
 ####################################
@@ -109,17 +110,17 @@ def couple_res():
             v2 = omegak / (np.pi * ( (k/L) + 1/(lj * np.sin(alpha0)) ))
             v3 = omegak / (np.pi * ( (k/L) - 1/(lj * np.sin(alpha0)) ))
             if v1>0 and v1<vmax:
-                tab_alpha.append(alpha[i])
+                tab_alpha.append(90 - alpha[i])
                 tab_v.append(v1)
             if v2>0 and v2<vmax:
-                tab_alpha.append(alpha[i])
+                tab_alpha.append(90 - alpha[i])
                 tab_v.append(v2)
             if v3>0 and v3<vmax:
-                tab_alpha.append(alpha[i])
+                tab_alpha.append(90 - alpha[i])
                 tab_v.append(v3)
         plt.scatter(tab_alpha,tab_v)
-    plt.xlabel('alpha_0 (°)')
-    plt.ylabel('v (m/s)')
+    plt.xlabel('Angle of attack theta_0 (°)')
+    plt.ylabel('Pedestrian velocity (m/s)')
     plt.show()
 
 ####################################
@@ -174,13 +175,13 @@ def plot_evolution():
         plt.plot(tab_x,1e3*tab_y)
         plt.scatter(x_pieton,1e3*y_pieton)
         plt.xlabel('x (m)')
-        plt.ylabel('y ($\\times 10^{-3}$m)')
+        plt.ylabel('Deflection ($\\times 10^{-3}$m)')
         plt.title('$t=$%s s' %round(t,2))
         axes = plt.gca()
         axes.set_ylim([-ymaj,ymaj])
-        plt.tight_layout()
-#        plt.pause(dt)
-        plt.savefig('PlotEvolution/File_evolution_%03d.png' % i)
+        # plt.tight_layout()
+        plt.pause(dt)
+        # plt.savefig('PlotEvolution/File_evolution_%03d.png' % i)
 
 ####################################
 # On calcule l'amplitude max du pont
@@ -207,11 +208,11 @@ def amplitude_angle():
     tab_ymax = np.zeros(nb_alpha)
     for i in range(nb_alpha):
         alpha0 = tab_alpha[i] * np.pi/180
-        tab_ymax[i] = y_maj(alpha0,v)
+        tab_ymax[i] = 1e3 * y_maj(alpha0,v)
     plt.figure()
-    plt.plot(tab_alpha,tab_ymax)
-    plt.xlabel('alpha_0 (°)')
-    plt.ylabel('amplitude_max (m)')
+    plt.plot(90 - tab_alpha,tab_ymax)
+    plt.xlabel('Angle of attack theta_0 (°)')
+    plt.ylabel('Maximum deflection ($\\times 10^{-3}$m)')
     plt.show()
 
 def amplitude_vitesse():
@@ -222,11 +223,11 @@ def amplitude_vitesse():
     tab_ymax = np.zeros(nb_vitesse)
     for i in range(nb_vitesse):
         v = tab_vitesse[i]
-        tab_ymax[i] = y_maj(alpha0,v)
+        tab_ymax[i] = 1e3 * y_maj(alpha0,v)
     plt.figure()
     plt.plot(tab_vitesse,tab_ymax)
-    plt.xlabel('v (m/s)')
-    plt.ylabel('amplitude_max (m)')
+    plt.xlabel('Pedestrian velocity (m/s)')
+    plt.ylabel('Maximum deflection ($\\times 10^{-3}$m)')
     plt.show()
 
 def amplitude_couple():
@@ -248,9 +249,9 @@ def amplitude_couple():
     ax1 = fig.add_subplot(111, projection='3d')
     tab_alpha2,tab_vitesse2 = np.meshgrid(tab_alpha,tab_vitesse)
     mycmap = plt.get_cmap('Reds')
-    ax1.set_xlabel('alpha_0 (°)')
-    ax1.set_ylabel('vitesse (m/s)')
-    ax1.set_zlabel('amplitude_max (m)')
-    surf1 = ax1.plot_surface(tab_alpha2, tab_vitesse2, tab_ymax, cmap=mycmap)
+    ax1.set_xlabel('Angle of attack theta_0 (°)')
+    ax1.set_ylabel('Pedestrian velocity (m/s)')
+    ax1.set_zlabel('Maximum deflection ($\\times 10^{-3}$m)')
+    surf1 = ax1.plot_surface(90 - tab_alpha2, tab_vitesse2, tab_ymax, cmap=mycmap)
     fig.colorbar(surf1, ax=ax1, shrink=0.5, aspect=5)
     plt.show()
