@@ -119,8 +119,8 @@ def couple_res():
                 tab_alpha.append(90 - alpha[i])
                 tab_v.append(v3)
         plt.scatter(tab_alpha,tab_v)
-    plt.xlabel('Angle of attack theta_0 (°)')
-    plt.ylabel('Pedestrian velocity (m/s)')
+    plt.xlabel('Angle of attack $\\theta_0$ (°)')
+    plt.ylabel('Pedestrian velocity $v$ (m/s)')
     plt.show()
 
 ####################################
@@ -211,7 +211,22 @@ def amplitude_angle():
         tab_ymax[i] = 1e3 * y_maj(alpha0,v)
     plt.figure()
     plt.plot(90 - tab_alpha,tab_ymax)
-    plt.xlabel('Angle of attack theta_0 (°)')
+    plt.xlabel('Angle of attack $\\theta_0$ (°)')
+    plt.ylabel('Maximum deflection ($\\times 10^{-3}$m)')
+    plt.show()
+
+def acceleration_angle():
+    nb_alpha = 100
+    alpha_min = 1
+    alpha_max = 70
+    tab_alpha = np.linspace(alpha_min,alpha_max,nb_alpha)
+    tab_ymax = np.zeros(nb_alpha)
+    for i in range(nb_alpha):
+        alpha0 = tab_alpha[i] * np.pi/180
+        tab_ymax[i] = 1e3 * y_maj(alpha0,v)
+    plt.figure()
+    plt.plot(90 - tab_alpha,tab_ymax)
+    plt.xlabel('Angle of attack $\\theta_0$ (°)')
     plt.ylabel('Maximum deflection ($\\times 10^{-3}$m)')
     plt.show()
 
