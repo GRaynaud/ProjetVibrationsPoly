@@ -17,7 +17,7 @@ plt.rc('axes',titlesize=20)
 plt.rc('legend',fontsize=18)
 plt.rc('figure',titlesize=24)
 
-ListeTHETA_0_deg = np.linspace(66,70,15)
+ListeTHETA_0_deg = np.linspace(60,89,100)
 
 liste_peak_acc_f2 = []
 liste_peak_acc_f1 = []
