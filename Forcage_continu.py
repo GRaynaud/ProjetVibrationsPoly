@@ -20,7 +20,7 @@ from mpl_toolkits.mplot3d import axes3d
 # Description des variables geometriques
 L = 11. #m - valeur article
 alpha0 = (90-69)*np.pi/180. #rad, angle d'attaque vertical, valeur article
-v = 1.2 #m/s vitesse du pieton
+v = 1.25 #m/s vitesse du pieton
 lj = 1 #m longueur d'une jambe
 Tfinal = L/v
 
@@ -96,8 +96,8 @@ def vitesse_res():
 # On trace les couples (v,alpha0) qui mènent à une résonance.
 
 def couple_res():
-    nb_alpha = 90
-    alpha = np.linspace(1,70,nb_alpha)
+    nb_alpha = 500
+    alpha = np.linspace(0.1,70,nb_alpha)
     vmax = 4
     plt.figure()
     for k in range(1,kmax+1):
@@ -121,6 +121,7 @@ def couple_res():
         plt.scatter(tab_alpha,tab_v)
     plt.xlabel('Angle of attack $\\theta_0$ (°)')
     plt.ylabel('Pedestrian velocity $v$ (m/s)')
+    plt.title('Bridge resonance conditions')
     plt.show()
 
 ####################################
@@ -236,26 +237,12 @@ def acceleration_angle():
     tab_ymax = np.zeros(nb_alpha)
     for i in range(nb_alpha):
         alpha0 = tab_alpha[i] * np.pi/180
-        tab_ymax[i] = 1e3 * y_maj(alpha0,v)
-    plt.figure()
-    plt.plot(90 - tab_alpha,tab_ymax)
-    plt.xlabel('Angle of attack $\\theta_0$ (°)')
-    plt.ylabel('Maximum deflection ($\\times 10^{-3}$m)')
-    plt.show()
-
-def acceleration_angle():
-    nb_alpha = 100
-    alpha_min = 1
-    alpha_max = 70
-    tab_alpha = np.linspace(alpha_min,alpha_max,nb_alpha)
-    tab_ymax = np.zeros(nb_alpha)
-    for i in range(nb_alpha):
-        alpha0 = tab_alpha[i] * np.pi/180
         tab_ymax[i] = ypp_maj(alpha0,v)
     plt.figure()
     plt.plot(90 - tab_alpha,tab_ymax)
-    plt.xlabel('Angle of attack theta_0 (°)')
+    plt.xlabel('Angle of attack $\\theta_0$ (°)')
     plt.ylabel('Peak acceleration ($ms^{-2}$)')
+    plt.title('$v = 1.25 m/s$ - Forçage continu')
     plt.show()
 
 def amplitude_vitesse():
