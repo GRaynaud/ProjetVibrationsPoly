@@ -155,6 +155,19 @@ def y_maj(alpha0,v):
         y_m += K1 * np.sqrt(2/(rhoA * L))
     return(y_m)
 
+def ypp_maj(alpha0,v):
+    y_m = 0
+    B = B_p(alpha0)
+    C = C_p(alpha0)
+    beta = beta_p(alpha0,v)
+    for k in range(1,kmax+1):
+        omegak = omega(k)
+        Omegak = Omega(k,v)
+        bk = (1/omegak) * ( abs((Omegak*B)/(omegak**2 - Omegak**2)) + abs(((Omegak+beta)*C)/(2 * (omegak**2 - (Omegak+beta)**2))) + abs(((Omegak-beta)*C)/(2 * (omegak**2 - (Omegak-beta)**2))) )
+        K1 = (omegak**2) * bk + (Omegak**2) * abs(B/(omegak**2 - Omegak**2)) + ((Omegak+beta)**2) * abs(C/(2 * (omegak**2 - (Omegak+beta)**2))) + ((Omegak-beta)**2) * abs(C/(2 * (omegak**2 - (Omegak-beta)**2)))
+        y_m += K1 * np.sqrt(2/(rhoA * L))
+    return(y_m)
+
 def plot_evolution():
     Nx = 100
     Nt = 400
@@ -213,6 +226,21 @@ def amplitude_angle():
     plt.plot(90 - tab_alpha,tab_ymax)
     plt.xlabel('Angle of attack theta_0 (°)')
     plt.ylabel('Maximum deflection ($\\times 10^{-3}$m)')
+    plt.show()
+
+def acceleration_angle():
+    nb_alpha = 100
+    alpha_min = 1
+    alpha_max = 70
+    tab_alpha = np.linspace(alpha_min,alpha_max,nb_alpha)
+    tab_ymax = np.zeros(nb_alpha)
+    for i in range(nb_alpha):
+        alpha0 = tab_alpha[i] * np.pi/180
+        tab_ymax[i] = ypp_maj(alpha0,v)
+    plt.figure()
+    plt.plot(90 - tab_alpha,tab_ymax)
+    plt.xlabel('Angle of attack theta_0 (°)')
+    plt.ylabel('Peak acceleration ($ms^{-2}$)')
     plt.show()
 
 def amplitude_vitesse():
