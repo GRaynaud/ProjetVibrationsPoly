@@ -20,7 +20,7 @@ from mpl_toolkits.mplot3d import axes3d
 # Description des variables geometriques
 L = 11. #m - valeur article
 alpha0 = (90-69)*np.pi/180. #rad, angle d'attaque vertical, valeur article
-v = 1.25 #m/s vitesse du pieton
+v = 1.2 #m/s vitesse du pieton
 lj = 1 #m longueur d'une jambe
 Tfinal = L/v
 
