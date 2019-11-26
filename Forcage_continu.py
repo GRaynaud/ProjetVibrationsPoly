@@ -194,7 +194,7 @@ def plot_evolution():
         axes = plt.gca()
         axes.set_ylim([-ymaj,ymaj])
         # plt.tight_layout()
-        plt.pause(dt)
+        plt.pause(dt/10)
         # plt.savefig('PlotEvolution/File_evolution_%03d.png' % i)
 
 ####################################
