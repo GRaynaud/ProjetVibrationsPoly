@@ -107,8 +107,8 @@ def couple_res():
         for i in range(nb_alpha):
             alpha0 = alpha[i] * np.pi/180.
             v1 = omegak / (np.pi * (k/L))
-            v2 = omegak / (np.pi * ( (k/L) + 1/(lj * np.sin(alpha0)) ))
-            v3 = omegak / (np.pi * ( (k/L) - 1/(lj * np.sin(alpha0)) ))
+            v2 = omegak / (np.pi * abs( (k/L) + 1/(lj * np.sin(alpha0)) ))
+            v3 = omegak / (np.pi * abs( (k/L) - 1/(lj * np.sin(alpha0)) ))
             if v1>0 and v1<vmax:
                 tab_alpha.append(90 - alpha[i])
                 tab_v.append(v1)
