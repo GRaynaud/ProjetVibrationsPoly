@@ -20,7 +20,7 @@ from mpl_toolkits.mplot3d import axes3d
 # Description des variables geometriques
 L = 11. #m - valeur article
 alpha0 = (90-69)*np.pi/180. #rad, angle d'attaque vertical, valeur article
-v = 1.25 #m/s vitesse du pieton
+v = 1.2 #m/s vitesse du pieton
 lj = 1 #m longueur d'une jambe
 Tfinal = L/v
 
@@ -107,8 +107,8 @@ def couple_res():
         for i in range(nb_alpha):
             alpha0 = alpha[i] * np.pi/180.
             v1 = omegak / (np.pi * (k/L))
-            v2 = omegak / (np.pi * ( (k/L) + 1/(lj * np.sin(alpha0)) ))
-            v3 = omegak / (np.pi * ( (k/L) - 1/(lj * np.sin(alpha0)) ))
+            v2 = omegak / (np.pi * abs( (k/L) + 1/(lj * np.sin(alpha0)) ))
+            v3 = omegak / (np.pi * abs( (k/L) - 1/(lj * np.sin(alpha0)) ))
             if v1>0 and v1<vmax:
                 tab_alpha.append(90 - alpha[i])
                 tab_v.append(v1)
@@ -194,7 +194,7 @@ def plot_evolution():
         axes = plt.gca()
         axes.set_ylim([-ymaj,ymaj])
         # plt.tight_layout()
-        plt.pause(dt)
+        plt.pause(dt/10)
         # plt.savefig('PlotEvolution/File_evolution_%03d.png' % i)
 
 ####################################
